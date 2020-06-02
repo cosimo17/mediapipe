@@ -70,7 +70,7 @@ class AnnotationRenderer {
   // top-left corner. Set it to true if the image origin is at the bottom-left
   // corner.
   void SetFlipTextVertically(bool flip);
-
+  void DrawText2(std::string text);
  private:
   // Draws a rectangle on the image as described in the annotation.
   void DrawRectangle(const RenderAnnotation& annotation);
@@ -117,14 +117,13 @@ class AnnotationRenderer {
 
   // Computes the font scale from font_face, size and thickness.
   double ComputeFontScale(int font_face, int font_size, int thickness);
-
   // Width and Height of the image (in pixels).
   int image_width_ = -1;
   int image_height_ = -1;
 
   // The image for rendering.
   cv::Mat mat_image_;
-
+  cv::Mat mask_img = cv::Mat::zeros(cv::Size(30,30), CV_8UC3);
   // See SetFlipTextVertically(bool).
   bool flip_text_vertically_ = false;
 };

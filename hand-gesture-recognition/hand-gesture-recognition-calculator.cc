@@ -14,16 +14,6 @@
 #include <numeric>      // std::iota
 #include <algorithm>    // std::sort, std::stable_sort
 
-// std::vector<size_t> sort_indexes(const std::vector<float> &v) {
-
-//   // initialize original index locations
-//   std::vector<size_t> idx(v.size());
-//   std::iota(idx.begin(), idx.end(), 0);
-//   std::stable_sort(idx.begin(), idx.end(),
-//        [&v](size_t i1, size_t i2) {return v[i1] < v[i2];});
-//   return idx;
-// }
-
 namespace mediapipe
 {
 
@@ -115,7 +105,6 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     CalculatorContext *cc)
 {
     cc->SetOffset(TimestampDiff(0));
-    // load_dataset();
     //load from binary file
     std::string string_path = "mediapipe/models/kpts.bin"; //file path
     std::string string_path2 = "/data/user/0/com.google.mediapipe.apps.handtrackinggpu/cache/mediapipe_asset_cache/kpts.bin";
@@ -123,7 +112,7 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
                      PathToResourceAsFile(string_path));
 
     // hard code
-    //TODO: use mediapipe buildin funtion to read binary file.
+    //TODO: use mediapipe buildin function to read binary file.
     char path[] = "/data/user/0/com.google.mediapipe.apps.handtrackinggpu/cache/mediapipe_asset_cache/kpts.bin";
     FILE* f = fopen(path, "rb");
     if (f){
@@ -258,10 +247,8 @@ float HandGestureRecognitionCalculator::distance_between_keypoint(keypoints* k1,
     float _d = 0;
     int n = k1->points.size();
     for (int i=0; i< n;i++){
-        //point i of keypoints1
-        p1 = &(_k1->points[i]);
-        //point i of keypoints2
-        p2 = &(_k2->points[i]);
+        p1 = &(_k1->points[i]); //point i of keypoints1
+        p2 = &(_k2->points[i]); //point i of keypoints2
         _d += distance_between_point(p1, p2);
     }
     return _d;
@@ -286,8 +273,7 @@ void HandGestureRecognitionCalculator::calculate_distance(keypoints* k1){
 int HandGestureRecognitionCalculator::query(keypoints* k1){
     //calculate disatances between this keypoint and all sample keypoints.
     calculate_distance(k1); 
-    //argsort distances
-    std::vector<size_t> index = sort_indexes(_distance);
+    std::vector<size_t> index = sort_indexes(_distance); //argsort distances
     //select topk and vote
     int count0 = 0;
     int count1 = 0;

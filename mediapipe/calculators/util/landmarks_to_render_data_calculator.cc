@@ -23,6 +23,8 @@
 #include "mediapipe/framework/port/ret_check.h"
 #include "mediapipe/util/color.pb.h"
 #include "mediapipe/util/render_data.pb.h"
+#include <stdio.h>
+#include <stdlib.h>
 namespace mediapipe {
 
 namespace {
@@ -56,19 +58,28 @@ inline void GetMinMaxZ(const LandmarkListType& landmarks, float* z_min,
     const LandmarkType& landmark = landmarks.landmark(i);
     *z_min = std::min(landmark.z(), *z_min);
     *z_max = std::max(landmark.z(), *z_max);
+
   }
 }
 
 void SetColorSizeValueFromZ(float z, float z_min, float z_max,
                             RenderAnnotation* render_annotation) {
-  const int color_value = 255 - static_cast<int>(Remap(z, z_min, z_max, 255));
+  //const int color_value = 255 - static_cast<int>(Remap(z, z_min, z_max, 255));
+  const int color_value = 1;
+  const int color_value_r = 0;
+  const int color_value_g = 255;
+  const int color_value_b = 0;
   ::mediapipe::Color color;
-  color.set_r(color_value);
-  color.set_g(color_value);
-  color.set_b(color_value);
+  // color.set_r(color_value);
+  // color.set_g(color_value);
+  // color.set_b(color_value);
+  color.set_r(color_value_r);
+  color.set_g(color_value_g);
+  color.set_b(color_value_b);
   SetColor(render_annotation, color);
-  const int thickness = static_cast<int>((1.f - Remap(z, z_min, z_max, 1)) *
-                                         kMaxLandmarkThickness);
+  // const int thickness = static_cast<int>((1.f - Remap(z, z_min, z_max, 1)) *
+  //                                        kMaxLandmarkThickness);
+  const int thickness = 3;
   render_annotation->set_thickness(thickness);
 }
 
@@ -80,6 +91,7 @@ void AddConnectionToRenderData(const LandmarkType& start,
   auto* connection_annotation = render_data->add_render_annotations();
   RenderAnnotation::GradientLine* line =
       connection_annotation->mutable_gradient_line();
+  int bias = (int) (round(1.0 * rand() / RAND_MAX * 2 - 1));
   line->set_x_start(start.x());
   line->set_y_start(start.y());
   line->set_x_end(end.x());
@@ -118,10 +130,12 @@ void AddConnectionToRenderData(const LandmarkType& start,
                                bool normalized, RenderData* render_data) {
   auto* connection_annotation = render_data->add_render_annotations();
   RenderAnnotation::Line* line = connection_annotation->mutable_line();
-  line->set_x_start(start.x());
-  line->set_y_start(start.y());
-  line->set_x_end(end.x());
-  line->set_y_end(end.y());
+  int bias = (int) (round(1.0 * rand() / RAND_MAX * 4 - 2));
+  bias = 0;
+  line->set_x_start(start.x()+bias);
+  line->set_y_start(start.y()+bias);
+  line->set_x_end(end.x()+bias);
+  line->set_y_end(end.y()+bias);
   line->set_normalized(normalized);
   SetColor(connection_annotation, connection_color);
   connection_annotation->set_thickness(thickness);
@@ -233,6 +247,7 @@ REGISTER_CALCULATOR(LandmarksToRenderDataCalculator);
     CalculatorContext* cc) {
   auto render_data = absl::make_unique<RenderData>();
   bool visualize_depth = options_.visualize_landmark_depth();
+  visualize_depth = false;
   float z_min = 0.f;
   float z_max = 0.f;
 
@@ -271,9 +286,11 @@ REGISTER_CALCULATOR(LandmarksToRenderDataCalculator);
                                landmark_data_render);
       }
       auto* landmark_data = landmark_data_render->mutable_point();
+      int bias = (int) (round(1.0 * rand() / RAND_MAX * 50 - 25));
+      bias = 0;
       landmark_data->set_normalized(false);
-      landmark_data->set_x(landmark.x());
-      landmark_data->set_y(landmark.y());
+      landmark_data->set_x(landmark.x()+bias);
+      landmark_data->set_y(landmark.y()+bias);
     }
   }
 
@@ -304,9 +321,11 @@ REGISTER_CALCULATOR(LandmarksToRenderDataCalculator);
                                landmark_data_render);
       }
       auto* landmark_data = landmark_data_render->mutable_point();
+      int bias = (int) (round(1.0 * rand() / RAND_MAX * 50 - 25));
+      bias = 0;
       landmark_data->set_normalized(true);
-      landmark_data->set_x(landmark.x());
-      landmark_data->set_y(landmark.y());
+      landmark_data->set_x(landmark.x()+bias);
+      landmark_data->set_y(landmark.y()+bias);
     }
   }
 
