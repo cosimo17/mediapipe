@@ -934,7 +934,7 @@ bool CalculatorGraph::HasInputStream(const std::string& stream_name) {
 }
 
 void CalculatorGraph::RecordError(const ::mediapipe::Status& error) {
-  VLOG(2) << "RecordError called with " << error;
+  LOG(ERROR) << "RecordError called with " << error;
   {
     absl::MutexLock lock(&error_mutex_);
     errors_.push_back(error);
