@@ -38,6 +38,9 @@ android_binary(
     assets = [
         "//mediapipe/graphs/hand_tracking:hand_tracking_mobile_gpu.binarypb",
         "//mediapipe/models:handedness.txt",
+        "//mediapipe/models:label.txt",
+        "//mediapipe/models:test.png",
+        "//mediapipe/models:kpts.bin",
         "//mediapipe/models:hand_landmark.tflite",
         "//mediapipe/models:palm_detection.tflite",
         "//mediapipe/models:palm_detection_labelmap.txt",
@@ -46,7 +49,7 @@ android_binary(
     manifest = "//mediapipe/examples/android/src/java/com/google/mediapipe/apps/basic:AndroidManifest.xml",
     manifest_values = {
         "applicationId": "com.google.mediapipe.apps.handtrackinggpu",
-        "appName": "Hand Tracking",
+        "appName": "HandTracking",
         "mainActivity": ".MainActivity",
         "cameraFacingFront": "True",
         "binaryGraphName": "hand_tracking_mobile_gpu.binarypb",

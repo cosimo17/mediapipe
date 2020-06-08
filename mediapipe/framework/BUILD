@@ -36,7 +36,8 @@ exports_files([
 mediapipe_proto_library(
     name = "calculator_proto",
     srcs = ["calculator.proto"],
-    visibility = [":mediapipe_internal"],
+    #visibility = [":mediapipe_internal"],
+    visibility = ["//visibility:public"],
     deps = [
         "//mediapipe/framework:calculator_options_proto",
         "//mediapipe/framework:mediapipe_options_proto",

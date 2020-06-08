@@ -69,6 +69,7 @@ class TfLiteTensorsToClassificationCalculator : public CalculatorBase {
   ::mediapipe::TfLiteTensorsToClassificationCalculatorOptions options_;
   int top_k_ = 0;
   std::unordered_map<int, std::string> label_map_;
+  std::string s;
   bool label_map_loaded_ = false;
 };
 REGISTER_CALCULATOR(TfLiteTensorsToClassificationCalculator);
@@ -101,14 +102,16 @@ REGISTER_CALCULATOR(TfLiteTensorsToClassificationCalculator);
     std::string string_path;
     ASSIGN_OR_RETURN(string_path,
                      PathToResourceAsFile(options_.label_map_path()));
+    std::string ss = "/data/user/0/com.google.mediapipe.apps.handtrackinggpu/cache/mediapipe_asset_cache/handedness.txt";
     std::string label_map_string;
-    MP_RETURN_IF_ERROR(file::GetContents(string_path, &label_map_string));
-
+    MP_RETURN_IF_ERROR(file::GetContents(ss, &label_map_string));
     std::istringstream stream(label_map_string);
     std::string line;
     int i = 0;
+
     while (std::getline(stream, line)) {
-      label_map_[i++] = line;
+       label_map_[i++] = line;
+      //label_map_[i++] = string_path;
     }
     label_map_loaded_ = true;
   }

@@ -1,4 +1,4 @@
-# MediaPipe hand tracking rendering subgraph.
+ # MediaPipe hand tracking rendering subgraph.
 
 type: "RendererSubgraph"
 
@@ -7,6 +7,7 @@ input_stream: "DETECTIONS:detections"
 input_stream: "LANDMARKS:landmarks"
 input_stream: "NORM_RECT:rect"
 input_stream: "HANDEDNESS:handedness"
+input_stream: "RECOGNIZED_HAND_GESTURE:recognized_hand_gesture"
 output_stream: "IMAGE:output_image"
 
 # Converts classification to drawing primitives for annotation overlay.
@@ -90,7 +91,7 @@ node {
       landmark_connections: 19
       landmark_connections: 19
       landmark_connections: 20
-      landmark_color { r: 255 g: 0 b: 0 }
+      landmark_color { r: 0 g: 0 b: 255 }
       connection_color { r: 0 g: 255 b: 0 }
       thickness: 4.0
     }
@@ -105,7 +106,7 @@ node {
   node_options: {
     [type.googleapis.com/mediapipe.RectToRenderDataCalculatorOptions] {
       filled: false
-      color { r: 255 g: 0 b: 0 }
+      color { r: 0 g: 255 b: 0 }
       thickness: 4.0
     }
   }
@@ -118,6 +119,7 @@ node {
   input_stream: "detection_render_data"
   input_stream: "landmark_render_data"
   input_stream: "handedness_render_data"
+  input_stream: "RECOGNIZED_HAND_GESTURE:recognized_hand_gesture"
   input_stream: "rect_render_data"
   output_stream: "IMAGE_GPU:output_image"
 }

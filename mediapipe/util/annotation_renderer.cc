@@ -81,6 +81,19 @@ void cv_line2(cv::Mat& img, const cv::Point& start, const cv::Point& end,
 
 }  // namespace
 
+void AnnotationRenderer::DrawText2(std::string text)
+{
+  const int left = 290;
+  const int top = 50;
+  const cv::Point origin(left, top);
+  const int font_size = 30;
+  const int thickness = 5;
+  const cv::Scalar color = cv::Scalar(0.0, 0.0, 255.0);
+  const cv::HersheyFonts font_face = cv::FONT_HERSHEY_PLAIN;
+  const double font_scale = ComputeFontScale(font_face, font_size, thickness);
+  cv::putText(mat_image_, text, origin, font_face, font_scale, color, thickness);
+}
+
 void AnnotationRenderer::RenderDataOnImage(const RenderData& render_data) {
   for (const auto& annotation : render_data.render_annotations()) {
     if (annotation.data_case() == RenderAnnotation::kRectangle) {
@@ -118,6 +131,8 @@ void AnnotationRenderer::AdoptImage(cv::Mat* input_image) {
 
   // No pixel data copy here, only headers are copied.
   mat_image_ = *input_image;
+  cv::Mat roi=mat_image_(cv::Rect(10,10,30,30));
+  mask_img.copyTo(roi);
 }
 
 int AnnotationRenderer::GetImageWidth() const { return mat_image_.cols; }
@@ -504,6 +519,19 @@ void AnnotationRenderer::DrawText(const RenderAnnotation& annotation) {
   const int font_face = text.font_face();
 
   const double font_scale = ComputeFontScale(font_face, font_size, thickness);
+  // cv::Mat mask = cv::imread("assets://test.png");
+  // cv::Mat mask2 = cv::Mat::zeros(cv::Size(30,30), CV_8UC3);
+  // cv::Mat roi = mat_image_(cv::Rect(100,100,mask.cols,mask.rows));
+  // mask2.copyTo(roi);
+  // const int left = 300;
+  // const int top = 50;
+  // const cv::Point origin(left, top);
+  // const int font_size = 20;
+  // const int thickness = 3;
+  // const cv::Scalar color = cv::Scalar(0.0, 0.0, 255.0);
+  // const cv::HersheyFonts font_face = cv::FONT_HERSHEY_PLAIN;
+  // const double font_scale = ComputeFontScale(font_face, font_size, thickness);
+  //cv::putText(mat_image_, text.display_text(), origin, font_face, font_scale, color, thickness);
   cv::putText(mat_image_, text.display_text(), origin, font_face, font_scale,
               color, thickness, /*lineType=*/8,
               /*bottomLeftOrigin=*/flip_text_vertically_);
