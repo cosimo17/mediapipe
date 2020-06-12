@@ -38,15 +38,6 @@ typedef struct{
     std::vector<keypoints> samples;
 }sampleset;
 
-// useful function to help debug
-std::string Convert(float Num)
-{
-    std::ostringstream oss;
-    oss<<Num;
-    std::string str(oss.str());
-    return str;
-}
-
 class HandGestureRecognitionCalculator : public CalculatorBase
 {
 public:
@@ -119,14 +110,7 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
         fread(floatdatas,1,/*number of byte*/30*21*2*4,f);
         fclose(f);
     }
-    else{ //debug
-        for(int i=0;i<30;i++){
-            for (int j=0;j<21;j++){
-                floatdatas[i][j][0] = 5.261;
-                floatdatas[i][j][1] = 5.261;
-            }
-        }
-    }
+
     //convert dataset to vector format
     keypoints kpt;
     point single_sample;
@@ -221,14 +205,6 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     if (sample_id==2){
         recognized_hand_gesture = new std::string("Scissors");
     }
-
-    // debug
-    // float xp = floatdatas[0][0][1];
-    // if (xp >= 104.0 && xp <= 106.0){
-    //     recognized_hand_gesture = new std::string("123");
-    // }
-    // std::string test = Convert(xp);
-    // recognized_hand_gesture = new std::string(test);
 
     cc->Outputs()
         .Tag(recognizedHandGestureTag)
