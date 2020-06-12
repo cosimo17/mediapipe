@@ -97,7 +97,7 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
 
     RET_CHECK(cc->Outputs().HasTag(recognizedHandGestureTag));
     cc->Outputs().Tag(recognizedHandGestureTag).Set<std::string>();
-
+    // cc->Outputs().Tag(recognizedHandGestureTag).Set<std::vector<std::string>>();
     return ::mediapipe::OkStatus();
 }
 
@@ -116,7 +116,7 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     char path[] = "/data/user/0/com.google.mediapipe.apps.handtrackinggpu/cache/mediapipe_asset_cache/kpts.bin";
     FILE* f = fopen(path, "rb");
     if (f){
-        fread(floatdatas,1,30*21*2*4,f);
+        fread(floatdatas,1,/*number of byte*/30*21*2*4,f);
         fclose(f);
     }
     else{ //debug
@@ -167,6 +167,8 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
 
     //default
     recognized_hand_gesture = new std::string("___");
+    std::vector<std::string>* result = new std::vector<std::string>;
+    result->push_back("test");
     //check if exist hand or not
     if (width < 0.01 || height < 0.01)
     {
@@ -227,10 +229,13 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     // }
     // std::string test = Convert(xp);
     // recognized_hand_gesture = new std::string(test);
+
     cc->Outputs()
         .Tag(recognizedHandGestureTag)
         .Add(recognized_hand_gesture, cc->InputTimestamp());
-
+    // cc->Outputs()
+    //     .Tag(recognizedHandGestureTag)
+    //     .Add(result, cc->InputTimestamp());
     return ::mediapipe::OkStatus();
 } // namespace mediapipe
 

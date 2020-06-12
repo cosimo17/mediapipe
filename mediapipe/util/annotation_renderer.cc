@@ -21,6 +21,7 @@
 #include "mediapipe/framework/port/logging.h"
 #include "mediapipe/framework/port/vector.h"
 #include "mediapipe/util/color.pb.h"
+#include<string>
 
 namespace mediapipe {
 namespace {
@@ -501,7 +502,7 @@ void AnnotationRenderer::DrawText(const RenderAnnotation& annotation) {
   int left = -1;
   int baseline = -1;
   int font_size = -1;
-
+  std::string right = "Right";
   const auto& text = annotation.text();
   if (text.normalized()) {
     CHECK(NormalizedtoPixelCoordinates(text.left(), text.baseline(),
@@ -512,6 +513,9 @@ void AnnotationRenderer::DrawText(const RenderAnnotation& annotation) {
     left = static_cast<int>(text.left());
     baseline = static_cast<int>(text.baseline());
     font_size = static_cast<int>(text.font_height());
+  }
+  if (text.display_text()==right){
+    left = left + 170;
   }
   cv::Point origin(left, baseline);
   const cv::Scalar color = MediapipeColorToOpenCVColor(annotation.color());

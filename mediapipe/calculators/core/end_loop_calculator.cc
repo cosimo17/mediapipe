@@ -21,6 +21,7 @@
 #include "mediapipe/framework/formats/rect.pb.h"
 #include "mediapipe/util/render_data.pb.h"
 #include "tensorflow/lite/interpreter.h"
+#include <string>
 
 namespace mediapipe {
 
@@ -46,4 +47,6 @@ REGISTER_CALCULATOR(EndLoopClassificationListCalculator);
 typedef EndLoopCalculator<std::vector<TfLiteTensor>> EndLoopTensorCalculator;
 REGISTER_CALCULATOR(EndLoopTensorCalculator);
 
+typedef EndLoopCalculator<std::vector<std::string>> EndLoopGestureCalculator;
+REGISTER_CALCULATOR(EndLoopGestureCalculator);
 }  // namespace mediapipe

@@ -41,6 +41,8 @@ android_binary(
         "//mediapipe/models:hand_landmark.tflite",
         "//mediapipe/models:palm_detection.tflite",
         "//mediapipe/models:palm_detection_labelmap.txt",
+        "//mediapipe/models:kpts.bin",
+        "//mediapipe/models:label.txt"
     ],
     assets_dir = "",
     manifest = "//mediapipe/examples/android/src/java/com/google/mediapipe/apps/basic:AndroidManifest.xml",

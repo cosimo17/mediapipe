@@ -75,6 +75,9 @@ node {
   input_stream: "NORM_RECTS:multi_hand_rects"
   output_stream: "LANDMARKS:multi_hand_landmarks"
   output_stream: "NORM_RECTS:multi_hand_rects_from_landmarks"
+  output_stream: "ITERABLE:multi_handedness"
+  output_stream: "MULTIGESTURE:multi_recognized_hand_gesture"
+#  output_stream: "RECOGNIZED_HAND_GESTURE:recognized_hand_gesture"
 }
 
 # Caches a hand rectangle fed back from MultiHandLandmarkSubgraph, and upon the
@@ -119,5 +122,8 @@ node {
   input_stream: "LANDMARKS:multi_hand_landmarks"
   input_stream: "NORM_RECTS:0:multi_palm_rects"
   input_stream: "NORM_RECTS:1:multi_hand_rects"
+  input_stream: "ITERABLE:multi_handedness"
+  input_stream: "MULTIGESTURE:multi_recognized_hand_gesture"
+#  input_stream: "RECOGNIZED_HAND_GESTURE:recognized_hand_gesture"
   output_stream: "IMAGE:output_video"
 }

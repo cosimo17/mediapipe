@@ -169,7 +169,7 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
   CHECK_GE(cc->Inputs().NumEntries(), 1);
 
   RET_CHECK(cc->Inputs().HasTag(recognizedHandGestureTag));
-  cc->Inputs().Tag(recognizedHandGestureTag).Set<std::string>();
+  cc->Inputs().Tag(recognizedHandGestureTag).Set<std::vector<std::string>>();
   bool use_gpu = false;
 
   if (cc->Inputs().HasTag(kInputFrameTag) &&
@@ -319,8 +319,8 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
       }
     }
   }
-  const auto &recognizedHandGesture = cc->Inputs().Tag(recognizedHandGestureTag).Get<std::string>();
-  renderer_->DrawText2(recognizedHandGesture);
+  // const auto &recognizedHandGesture = cc->Inputs().Tag(recognizedHandGestureTag).Get<std::string>();
+  // renderer_->DrawText2(recognizedHandGesture);
   if (use_gpu_) {
 #if !defined(MEDIAPIPE_DISABLE_GPU)
     // Overlay rendered image in OpenGL, onto a copy of input.

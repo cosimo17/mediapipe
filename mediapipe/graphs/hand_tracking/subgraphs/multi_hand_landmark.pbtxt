@@ -9,7 +9,9 @@ input_stream: "NORM_RECTS:multi_hand_rects"
 output_stream: "LANDMARKS:filtered_multi_hand_landmarks"
 # A vector of NormalizedRect, one per each hand.
 output_stream: "NORM_RECTS:filtered_multi_hand_rects_for_next_frame"
-
+#output_stream: "RECOGNIZED_HAND_GESTURE:recognized_hand_gesture"
+output_stream: "ITERABLE:multi_handedness"
+output_stream: "MULTIGESTURE:multi_recognized_hand_gesture"
 # Outputs each element of multi_hand_rects at a fake timestamp for the rest
 # of the graph to process. Clones the input_video packet for each
 # single_hand_rect at the fake timestamp. At the end of the loop,
@@ -31,6 +33,15 @@ node {
   output_stream: "LANDMARKS:single_hand_landmarks"
   output_stream: "NORM_RECT:single_hand_rect_from_landmarks"
   output_stream: "PRESENCE:single_hand_presence"
+  output_stream: "HANDEDNESS:single_handedness"
+  output_stream: "RECOGNIZED_HAND_GESTURE:recognized_hand_gesture"
+}
+
+node {
+  calculator: "EndLoopGestureCalculator"
+  input_stream: "ITEM:recognized_hand_gesture"
+  input_stream: "BATCH_END:single_hand_rect_timestamp"
+  output_stream: "ITERABLE:multi_recognized_hand_gesture"
 }
 
 # Collects the boolean presence value for each single hand into a vector. Upon
@@ -62,6 +73,15 @@ node {
   input_stream: "BATCH_END:single_hand_rect_timestamp"
   output_stream: "ITERABLE:multi_hand_rects_for_next_frame"
 }
+
+############################################################
+node {
+  calculator: "EndLoopClassificationListCalculator"
+  input_stream: "ITEM:single_handedness"
+  input_stream: "BATCH_END:single_hand_rect_timestamp"
+  output_stream: "ITERABLE:multi_handedness"
+}
+##############################################################
 
 # Filters the input vector of landmarks based on hand presence value for each
 # hand. If the hand presence for hand #i is false, the set of landmarks

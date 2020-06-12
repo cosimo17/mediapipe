@@ -235,6 +235,7 @@ cc_library(
         "//mediapipe/framework/port:integral_types",
         "//mediapipe/framework/port:ret_check",
         "//mediapipe/framework/port:status",
+        "//mediapipe/framework/formats:classification_cc_proto",
         "@com_google_absl//absl/memory",
     ],
     alwayslink = 1,
