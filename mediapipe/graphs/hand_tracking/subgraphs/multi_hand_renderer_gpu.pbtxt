@@ -11,7 +11,41 @@ input_stream: "NORM_RECTS:0:multi_palm_rects"
 input_stream: "NORM_RECTS:1:multi_hand_rects"
 # A vector of Detection, one for each hand.
 input_stream: "DETECTIONS:palm_detections"
+input_stream: "ITERABLE:multi_handedness"
+input_stream: "MULTIGESTURE:multi_recognized_hand_gesture"
 output_stream: "IMAGE:output_image"
+#input_stream: "RECOGNIZED_HAND_GESTURE:recognized_hand_gesture"
+
+node {
+  calculator: "BeginLoopClassificationListCalculator"
+  input_stream: "ITERABLE:multi_handedness"
+  output_stream: "ITEM:cloned_single_handedness"
+  output_stream: "BATCH_END:handedness_timestamp"
+}
+node {
+  calculator: "LabelsToRenderDataCalculator"
+  input_stream: "CLASSIFICATIONS:cloned_single_handedness"
+  output_stream: "RENDER_DATA:handedness_render_data"
+  node_options: {
+    [type.googleapis.com/mediapipe.LabelsToRenderDataCalculatorOptions]: {
+      color { r: 255 g: 0 b: 0 }
+      thickness: 10.0
+      font_height_px: 50
+      horizontal_offset_px: 200
+      vertical_offset_px: 100
+
+      max_num_labels: 1
+      location: TOP_LEFT
+    }
+  }
+}
+
+node {
+  calculator: "EndLoopRenderDataCalculator"
+  input_stream: "ITEM:handedness_render_data"
+  input_stream: "BATCH_END:handedness_timestamp"
+  output_stream: "ITERABLE:multi_handedness_render_data"
+}
 
 # Converts detections to drawing primitives for annotation overlay.
 node {
@@ -65,7 +99,7 @@ node {
   output_stream: "BATCH_END:landmark_timestamp"
 }
 
-# Converts landmarks to drawing primitives for annotation overlay.
+# # Converts landmarks to drawing primitives for annotation overlay.
 node {
   calculator: "LandmarksToRenderDataCalculator"
   input_stream: "NORM_LANDMARKS:single_hand_landmarks"
@@ -139,6 +173,9 @@ node {
   input_stream: "detection_render_data"
   input_stream: "multi_hand_rects_render_data"
   input_stream: "multi_palm_rects_render_data"
-  input_stream: "VECTOR:0:multi_hand_landmarks_render_data"
+  input_stream: "VECTOR:0:multi_handedness_render_data"
+  input_stream: "VECTOR:1:multi_hand_landmarks_render_data"
+  input_stream: "RECOGNIZED_HAND_GESTURE:multi_recognized_hand_gesture"
+#  input_stream: "RECOGNIZED_HAND_GESTURE:recognized_hand_gesture"
   output_stream: "IMAGE_GPU:output_image"
 }

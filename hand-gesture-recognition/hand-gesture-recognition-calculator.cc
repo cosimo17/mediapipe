@@ -38,15 +38,6 @@ typedef struct{
     std::vector<keypoints> samples;
 }sampleset;
 
-// useful function to help debug
-std::string Convert(float Num)
-{
-    std::ostringstream oss;
-    oss<<Num;
-    std::string str(oss.str());
-    return str;
-}
-
 class HandGestureRecognitionCalculator : public CalculatorBase
 {
 public:
@@ -97,7 +88,7 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
 
     RET_CHECK(cc->Outputs().HasTag(recognizedHandGestureTag));
     cc->Outputs().Tag(recognizedHandGestureTag).Set<std::string>();
-
+    // cc->Outputs().Tag(recognizedHandGestureTag).Set<std::vector<std::string>>();
     return ::mediapipe::OkStatus();
 }
 
@@ -116,17 +107,10 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     char path[] = "/data/user/0/com.google.mediapipe.apps.handtrackinggpu/cache/mediapipe_asset_cache/kpts.bin";
     FILE* f = fopen(path, "rb");
     if (f){
-        fread(floatdatas,1,30*21*2*4,f);
+        fread(floatdatas,1,/*number of byte*/30*21*2*4,f);
         fclose(f);
     }
-    else{ //debug
-        for(int i=0;i<30;i++){
-            for (int j=0;j<21;j++){
-                floatdatas[i][j][0] = 5.261;
-                floatdatas[i][j][1] = 5.261;
-            }
-        }
-    }
+
     //convert dataset to vector format
     keypoints kpt;
     point single_sample;
@@ -167,6 +151,8 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
 
     //default
     recognized_hand_gesture = new std::string("___");
+    std::vector<std::string>* result = new std::vector<std::string>;
+    result->push_back("test");
     //check if exist hand or not
     if (width < 0.01 || height < 0.01)
     {
@@ -220,17 +206,12 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
         recognized_hand_gesture = new std::string("Scissors");
     }
 
-    // debug
-    // float xp = floatdatas[0][0][1];
-    // if (xp >= 104.0 && xp <= 106.0){
-    //     recognized_hand_gesture = new std::string("123");
-    // }
-    // std::string test = Convert(xp);
-    // recognized_hand_gesture = new std::string(test);
     cc->Outputs()
         .Tag(recognizedHandGestureTag)
         .Add(recognized_hand_gesture, cc->InputTimestamp());
-
+    // cc->Outputs()
+    //     .Tag(recognizedHandGestureTag)
+    //     .Add(result, cc->InputTimestamp());
     return ::mediapipe::OkStatus();
 } // namespace mediapipe
 
