@@ -96,6 +96,7 @@ REGISTER_CALCULATOR(TfLiteTensorsToClassificationCalculator);
   options_ = cc->Options<
       ::mediapipe::TfLiteTensorsToClassificationCalculatorOptions>();
 
+
   top_k_ = options_.top_k();
   if (options_.has_label_map_path()) {
     std::string string_path;

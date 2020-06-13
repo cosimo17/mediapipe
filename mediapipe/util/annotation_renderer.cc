@@ -82,13 +82,15 @@ void cv_line2(cv::Mat& img, const cv::Point& start, const cv::Point& end,
 
 }  // namespace
 
-void AnnotationRenderer::DrawText2(std::string text)
+void AnnotationRenderer::DrawText2(std::string text, int n)
 {
   const int left = 290;
-  const int top = 50;
+  int top;
+  if (n==0)top = 50;
+  if (n>0) top = 100;
   const cv::Point origin(left, top);
   const int font_size = 30;
-  const int thickness = 5;
+  const int thickness = 3;
   const cv::Scalar color = cv::Scalar(0.0, 0.0, 255.0);
   const cv::HersheyFonts font_face = cv::FONT_HERSHEY_PLAIN;
   const double font_scale = ComputeFontScale(font_face, font_size, thickness);
