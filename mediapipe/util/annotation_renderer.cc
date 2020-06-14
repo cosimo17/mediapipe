@@ -84,15 +84,15 @@ void cv_line2(cv::Mat& img, const cv::Point& start, const cv::Point& end,
 
 void AnnotationRenderer::DrawText2(std::string text)
 {
-  const int left = 290;
-  const int top = 50;
-  const cv::Point origin(left, top);
-  const int font_size = 30;
-  const int thickness = 5;
-  const cv::Scalar color = cv::Scalar(0.0, 0.0, 255.0);
-  const cv::HersheyFonts font_face = cv::FONT_HERSHEY_PLAIN;
-  const double font_scale = ComputeFontScale(font_face, font_size, thickness);
-  cv::putText(mat_image_, text, origin, font_face, font_scale, color, thickness);
+//  const int left = 290;
+//  const int top = 50;
+//  const cv::Point origin(left, top);
+//  const int font_size = 30;
+//  const int thickness = 5;
+//  const cv::Scalar color = cv::Scalar(0.0, 0.0, 255.0);
+//  const cv::HersheyFonts font_face = cv::FONT_HERSHEY_PLAIN;
+//  const double font_scale = ComputeFontScale(font_face, font_size, thickness);
+//  cv::putText(mat_image_, text, origin, font_face, font_scale, color, thickness);
 }
 
 void AnnotationRenderer::RenderDataOnImage(const RenderData& render_data) {

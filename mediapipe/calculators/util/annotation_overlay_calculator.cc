@@ -47,6 +47,7 @@ constexpr char kInputVectorTag[] = "VECTOR";
 constexpr char kInputFrameTagGpu[] = "IMAGE_GPU";
 constexpr char kOutputFrameTagGpu[] = "IMAGE_GPU";
 constexpr char recognizedHandGestureTag[] = "RECOGNIZED_HAND_GESTURE";
+constexpr char kInputOverlay[] = "DEBUG";
 
 enum { ATTRIB_VERTEX, ATTRIB_TEXTURE_POSITION, NUM_ATTRIBUTES };
 
@@ -166,6 +167,7 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
 
 ::mediapipe::Status AnnotationOverlayCalculator::GetContract(
     CalculatorContract* cc) {
+  LOG(ERROR) << "AnnotationOverlayCalculator::GetContract 1";
   CHECK_GE(cc->Inputs().NumEntries(), 1);
 
   RET_CHECK(cc->Inputs().HasTag(recognizedHandGestureTag));
@@ -191,6 +193,9 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
   if (cc->Inputs().HasTag(kInputFrameTag)) {
     cc->Inputs().Tag(kInputFrameTag).Set<ImageFrame>();
   }
+
+  RET_CHECK(cc->Inputs().HasTag(kInputOverlay));
+  cc->Inputs().Tag(kInputOverlay).Set<bool>();
 
   // Data streams to render.
   for (CollectionItemId id = cc->Inputs().BeginId(); id < cc->Inputs().EndId();
@@ -221,7 +226,7 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
     MP_RETURN_IF_ERROR(mediapipe::GlCalculatorHelper::UpdateContract(cc));
 #endif  //  !MEDIAPIPE_DISABLE_GPU
   }
-
+  LOG(ERROR) << "AnnotationOverlayCalculator::GetContract 2";
   return ::mediapipe::OkStatus();
 }
 
@@ -292,44 +297,49 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
     MP_RETURN_IF_ERROR(CreateRenderTargetCpu(cc, image_mat, &target_format));
   }
 
-  // Reset the renderer with the image_mat. No copy here.
-  renderer_->AdoptImage(image_mat.get());
+  const bool overlay = cc->Inputs().Tag(kInputOverlay).Get<bool>();
+  if (overlay) {
 
-  // Render streams onto render target.
-  for (CollectionItemId id = cc->Inputs().BeginId(); id < cc->Inputs().EndId();
-       ++id) {
-    auto tag_and_index = cc->Inputs().TagAndIndexFromId(id);
-    std::string tag = tag_and_index.first;
-    if (!tag.empty() && tag != kInputVectorTag) {
-      continue;
-    }
-    if (cc->Inputs().Get(id).IsEmpty()) {
-      continue;
-    }
-    if (tag.empty()) {
-      // Empty tag defaults to accepting a single object of RenderData type.
-      const RenderData& render_data = cc->Inputs().Get(id).Get<RenderData>();
-      renderer_->RenderDataOnImage(render_data);
-    } else {
-      RET_CHECK_EQ(kInputVectorTag, tag);
-      const std::vector<RenderData>& render_data_vec =
-          cc->Inputs().Get(id).Get<std::vector<RenderData>>();
-      for (const RenderData& render_data : render_data_vec) {
-        renderer_->RenderDataOnImage(render_data);
+      // Reset the renderer with the image_mat. No copy here.
+      renderer_->AdoptImage(image_mat.get());
+
+      // Render streams onto render target.
+      for (CollectionItemId id = cc->Inputs().BeginId(); id < cc->Inputs().EndId();
+           ++id) {
+        auto tag_and_index = cc->Inputs().TagAndIndexFromId(id);
+        std::string tag = tag_and_index.first;
+        if (!tag.empty() && tag != kInputVectorTag) {
+          continue;
+        }
+        if (cc->Inputs().Get(id).IsEmpty()) {
+          continue;
+        }
+        if (tag.empty()) {
+          // Empty tag defaults to accepting a single object of RenderData type.
+          const RenderData& render_data = cc->Inputs().Get(id).Get<RenderData>();
+          renderer_->RenderDataOnImage(render_data);
+        } else {
+          RET_CHECK_EQ(kInputVectorTag, tag);
+          const std::vector<RenderData>& render_data_vec =
+              cc->Inputs().Get(id).Get<std::vector<RenderData>>();
+          for (const RenderData& render_data : render_data_vec) {
+            renderer_->RenderDataOnImage(render_data);
+          }
+        }
       }
-    }
+      // const auto &recognizedHandGesture = cc->Inputs().Tag(recognizedHandGestureTag).Get<std::string>();
+      const std::vector<std::string> &recognizedHandGesture = cc->Inputs().Tag(recognizedHandGestureTag).Get<std::vector<std::string>>();
+      // renderer_->DrawText2(recognizedHandGesture);
+      for(int gesture_id=0;gesture_id<recognizedHandGesture.size();gesture_id++){
+        if(gesture_id<1){
+          renderer_->DrawText2(recognizedHandGesture[gesture_id]);
+        }
+        else{
+          renderer_->DrawText2("____");
+        }
+      }
   }
-  // const auto &recognizedHandGesture = cc->Inputs().Tag(recognizedHandGestureTag).Get<std::string>();
-  const std::vector<std::string> &recognizedHandGesture = cc->Inputs().Tag(recognizedHandGestureTag).Get<std::vector<std::string>>();
-  // renderer_->DrawText2(recognizedHandGesture);
-  for(int gesture_id=0;gesture_id<recognizedHandGesture.size();gesture_id++){
-    if(gesture_id<1){
-      renderer_->DrawText2(recognizedHandGesture[gesture_id]);
-    }
-    else{
-      renderer_->DrawText2("____");
-    }
-  }
+
   if (use_gpu_) {
 #if !defined(MEDIAPIPE_DISABLE_GPU)
     // Overlay rendered image in OpenGL, onto a copy of input.
