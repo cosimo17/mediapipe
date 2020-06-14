@@ -64,6 +64,7 @@ private:
     
     sampleset datas; // dataset
     
+
     float floatdatas[30][21][2];
     
     std::vector<int> class_id;
@@ -98,13 +99,12 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     cc->SetOffset(TimestampDiff(0));
     //load from binary file
     std::string string_path = "mediapipe/models/kpts.bin"; //file path
-    std::string string_path2 = "/data/user/0/com.google.mediapipe.apps.handtrackinggpu/cache/mediapipe_asset_cache/kpts.bin";
-    ASSIGN_OR_RETURN(string_path2,
+    ASSIGN_OR_RETURN(string_path,
                      PathToResourceAsFile(string_path));
-
     // hard code
     //TODO: use mediapipe buildin function to read binary file.
-    char path[] = "/data/user/0/com.google.mediapipe.apps.handtrackinggpu/cache/mediapipe_asset_cache/kpts.bin";
+    // char path[] = "/data/user/0/com.google.mediapipe.apps.handtrackinggpu/cache/mediapipe_asset_cache/kpts.bin";
+    char* path = (char*)string_path.c_str();
     FILE* f = fopen(path, "rb");
     if (f){
         fread(floatdatas,1,/*number of byte*/30*21*2*4,f);
@@ -151,13 +151,14 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
 
     //default
     recognized_hand_gesture = new std::string("___");
-    std::vector<std::string>* result = new std::vector<std::string>;
-    result->push_back("test");
+    // std::vector<std::string>* result = new std::vector<std::string>;
+    // result->push_back("test");
     //check if exist hand or not
     if (width < 0.01 || height < 0.01)
     {
         // LOG(INFO) << "No Hand Detected";
         recognized_hand_gesture = new std::string("___");
+        // result->push_back("___");
         cc->Outputs()
             .Tag(recognizedHandGestureTag)
             .Add(recognized_hand_gesture, cc->InputTimestamp());
@@ -198,12 +199,15 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     int sample_id = query(&kpt);
     if (sample_id==0){
         recognized_hand_gesture = new std::string("paper");
+        // result->push_back("paper");
     }
     if (sample_id==1){
         recognized_hand_gesture = new std::string("rock");
+        // result->push_back("rock");
     }
     if (sample_id==2){
         recognized_hand_gesture = new std::string("Scissors");
+        // result->push_back("scissor");
     }
 
     cc->Outputs()

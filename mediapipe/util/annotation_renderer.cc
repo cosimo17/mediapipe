@@ -82,7 +82,7 @@ void cv_line2(cv::Mat& img, const cv::Point& start, const cv::Point& end,
 
 }  // namespace
 
-void AnnotationRenderer::DrawText2(std::string text)
+void AnnotationRenderer::DrawText2(std::string text, int n)
 {
 //  const int left = 290;
 //  const int top = 50;

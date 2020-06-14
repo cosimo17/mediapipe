@@ -70,7 +70,7 @@ class AnnotationRenderer {
   // top-left corner. Set it to true if the image origin is at the bottom-left
   // corner.
   void SetFlipTextVertically(bool flip);
-  void DrawText2(std::string text);
+  void DrawText2(std::string text, int n);
  private:
   // Draws a rectangle on the image as described in the annotation.
   void DrawRectangle(const RenderAnnotation& annotation);

@@ -297,8 +297,8 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
     MP_RETURN_IF_ERROR(CreateRenderTargetCpu(cc, image_mat, &target_format));
   }
 
-  const bool overlay = cc->Inputs().Tag(kInputOverlay).Get<bool>();
-  if (overlay) {
+//  const bool overlay = cc->Inputs().Tag(kInputOverlay).Get<bool>();
+//  if (overlay) {
 
       // Reset the renderer with the image_mat. No copy here.
       renderer_->AdoptImage(image_mat.get());
@@ -327,18 +327,7 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
           }
         }
       }
-      // const auto &recognizedHandGesture = cc->Inputs().Tag(recognizedHandGestureTag).Get<std::string>();
-      const std::vector<std::string> &recognizedHandGesture = cc->Inputs().Tag(recognizedHandGestureTag).Get<std::vector<std::string>>();
-      // renderer_->DrawText2(recognizedHandGesture);
-      for(int gesture_id=0;gesture_id<recognizedHandGesture.size();gesture_id++){
-        if(gesture_id<1){
-          renderer_->DrawText2(recognizedHandGesture[gesture_id]);
-        }
-        else{
-          renderer_->DrawText2("____");
-        }
-      }
-  }
+//    }
 
   if (use_gpu_) {
 #if !defined(MEDIAPIPE_DISABLE_GPU)
