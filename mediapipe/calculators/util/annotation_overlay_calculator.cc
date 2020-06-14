@@ -194,8 +194,8 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
     cc->Inputs().Tag(kInputFrameTag).Set<ImageFrame>();
   }
 
-  RET_CHECK(cc->Inputs().HasTag(kInputOverlay));
-  cc->Inputs().Tag(kInputOverlay).Set<bool>();
+  //RET_CHECK(cc->Inputs().HasTag(kInputOverlay));
+  //cc->Inputs().Tag(kInputOverlay).Set<bool>();
 
   // Data streams to render.
   for (CollectionItemId id = cc->Inputs().BeginId(); id < cc->Inputs().EndId();

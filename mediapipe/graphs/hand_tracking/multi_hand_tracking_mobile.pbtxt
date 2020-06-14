@@ -4,7 +4,6 @@
 
 # Images coming into and out of the graph.
 input_stream: "input_video"
-input_stream: "overlay"
 output_stream: "output_video"
 
 
@@ -119,7 +118,6 @@ node {
 # images (see multi_hand_renderer_gpu.pbtxt).
 node {
   calculator: "MultiHandRendererSubgraph"
-  input_stream: "DEBUG:overlay"
   input_stream: "IMAGE:throttled_input_video"
   input_stream: "DETECTIONS:multi_palm_detections"
   input_stream: "LANDMARKS:multi_hand_landmarks"
