@@ -4,6 +4,7 @@
 
 # Images coming into and out of the graph.
 input_stream: "input_video"
+input_stream: "overlay"
 output_stream: "output_video"
 
 
@@ -125,6 +126,7 @@ node {
   input_stream: "NORM_RECTS:1:multi_hand_rects"
   input_stream: "ITERABLE:multi_handedness"
   input_stream: "MULTIGESTURE:multi_recognized_hand_gesture"
+  input_stream: "DEBUG:overlay"
 #  input_stream: "RECOGNIZED_HAND_GESTURE:recognized_hand_gesture"
   output_stream: "IMAGE:output_video"
 }

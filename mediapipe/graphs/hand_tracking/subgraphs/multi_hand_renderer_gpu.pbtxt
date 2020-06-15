@@ -13,6 +13,7 @@ input_stream: "NORM_RECTS:1:multi_hand_rects"
 input_stream: "DETECTIONS:palm_detections"
 input_stream: "ITERABLE:multi_handedness"
 input_stream: "MULTIGESTURE:multi_recognized_hand_gesture"
+input_stream: "DEBUG:overlay"
 output_stream: "IMAGE:output_image"
 #input_stream: "RECOGNIZED_HAND_GESTURE:recognized_hand_gesture"
 
@@ -176,6 +177,7 @@ node {
   input_stream: "VECTOR:0:multi_handedness_render_data"
   input_stream: "VECTOR:1:multi_hand_landmarks_render_data"
   input_stream: "RECOGNIZED_HAND_GESTURE:multi_recognized_hand_gesture"
+  input_stream: "DEBUG:overlay"
 #  input_stream: "RECOGNIZED_HAND_GESTURE:recognized_hand_gesture"
   output_stream: "IMAGE_GPU:output_image"
 }

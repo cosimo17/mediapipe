@@ -195,7 +195,7 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
   }
 
   //RET_CHECK(cc->Inputs().HasTag(kInputOverlay));
-  //cc->Inputs().Tag(kInputOverlay).Set<bool>();
+  cc->Inputs().Tag(kInputOverlay).Set<bool>();
 
   // Data streams to render.
   for (CollectionItemId id = cc->Inputs().BeginId(); id < cc->Inputs().EndId();
@@ -297,8 +297,8 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
     MP_RETURN_IF_ERROR(CreateRenderTargetCpu(cc, image_mat, &target_format));
   }
 
-//  const bool overlay = cc->Inputs().Tag(kInputOverlay).Get<bool>();
-//  if (overlay) {
+  const bool overlay = true;//cc->Inputs().Tag(kInputOverlay).Get<bool>();
+  if (overlay) {
 
       // Reset the renderer with the image_mat. No copy here.
       renderer_->AdoptImage(image_mat.get());
@@ -327,7 +327,7 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
           }
         }
       }
-//    }
+    }
 
   if (use_gpu_) {
 #if !defined(MEDIAPIPE_DISABLE_GPU)
