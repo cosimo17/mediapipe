@@ -60,6 +60,9 @@ android_binary(
         ":mediapipe_jni_lib",
         "//mediapipe/examples/android/src/java/com/google/mediapipe/apps/basic:basic_lib",
         "//mediapipe/framework/formats:landmark_java_proto_lite",
+        "//mediapipe/framework/formats:rect_java_proto_lite",
+        "//mediapipe/framework/formats:gesture_java_proto_lite",
+        "//mediapipe/framework/formats:classification_java_proto_lite",
         "//mediapipe/java/com/google/mediapipe/framework:android_framework",
     ],
 )

@@ -112,6 +112,16 @@ cat > $(OUTS) <<EOF
         ],
     )
 
+    _proto_java_src_generator(
+        name = "detection_proto",
+        proto_src = "mediapipe/framework/formats/classification.proto",
+        java_lite_out = "com/google/mediapipe/formats/proto/ClassificationProto.java",
+        srcs = [
+            "//mediapipe/framework/formats:protos_src",
+            "//mediapipe/framework/formats/annotation:protos_src",
+        ],
+    )
+
     android_library(
         name = name + "_android_lib",
         srcs = [
@@ -124,6 +134,7 @@ cat > $(OUTS) <<EOF
             "com/google/mediapipe/formats/proto/LocationDataProto.java",
             "com/google/mediapipe/formats/annotation/proto/RasterizationProto.java",
             "com/google/mediapipe/formats/proto/GestureProto.java",
+            "com/google/mediapipe/formats/proto/ClassificationProto.java",
         ],
         manifest = "AndroidManifest.xml",
         proguard_specs = ["//mediapipe/java/com/google/mediapipe/framework:proguard.pgcfg"],
