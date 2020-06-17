@@ -29,6 +29,7 @@ cc_library(
  #      "//mediapipe/util/android/file/base",
  #      "//mediapipe/framework/port:file_helpers",
         "//mediapipe/util:resource_util",
+        "//mediapipe/framework/formats:gesture_cc_proto",
     ] + select({
         "//mediapipe:android": [
             "//mediapipe/util/android/file/base",
