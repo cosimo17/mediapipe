@@ -167,7 +167,6 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
 
 ::mediapipe::Status AnnotationOverlayCalculator::GetContract(
     CalculatorContract* cc) {
-  LOG(ERROR) << "AnnotationOverlayCalculator::GetContract 1";
   CHECK_GE(cc->Inputs().NumEntries(), 1);
 
   RET_CHECK(cc->Inputs().HasTag(recognizedHandGestureTag));
@@ -196,6 +195,7 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
 
   //RET_CHECK(cc->Inputs().HasTag(kInputOverlay));
   cc->Inputs().Tag(kInputOverlay).Set<bool>();
+  //cc->Inputs().Tag(kInputOverlay).Set<int>();
 
   // Data streams to render.
   for (CollectionItemId id = cc->Inputs().BeginId(); id < cc->Inputs().EndId();
@@ -226,7 +226,6 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
     MP_RETURN_IF_ERROR(mediapipe::GlCalculatorHelper::UpdateContract(cc));
 #endif  //  !MEDIAPIPE_DISABLE_GPU
   }
-  LOG(ERROR) << "AnnotationOverlayCalculator::GetContract 2";
   return ::mediapipe::OkStatus();
 }
 
@@ -297,7 +296,7 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
     MP_RETURN_IF_ERROR(CreateRenderTargetCpu(cc, image_mat, &target_format));
   }
 
-  const bool overlay = true;//cc->Inputs().Tag(kInputOverlay).Get<bool>();
+  const bool overlay = cc->Inputs().Tag(kInputOverlay).Get<bool>();
   if (overlay) {
 
       // Reset the renderer with the image_mat. No copy here.

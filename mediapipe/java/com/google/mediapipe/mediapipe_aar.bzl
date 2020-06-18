@@ -105,6 +105,24 @@ cat > $(OUTS) <<EOF
         ],
     )
 
+    _proto_java_src_generator(
+        name = "rect_proto",
+        proto_src = "mediapipe/framework/formats/rect.proto",
+        java_lite_out = "com/google/mediapipe/formats/proto/RectProto.java",
+        srcs = [
+            "//mediapipe/framework/formats:protos_src",
+        ],
+    )
+
+    _proto_java_src_generator(
+        name = "classification_proto",
+        proto_src = "mediapipe/framework/formats/classification.proto",
+        java_lite_out = "com/google/mediapipe/formats/proto/ClassificationProto.java",
+        srcs = [
+            "//mediapipe/framework/formats:protos_src",
+        ],
+    )
+
     android_library(
         name = name + "_android_lib",
         srcs = [
@@ -114,6 +132,8 @@ cat > $(OUTS) <<EOF
             "com/google/mediapipe/proto/CalculatorProto.java",
             "com/google/mediapipe/formats/proto/LandmarkProto.java",
             "com/google/mediapipe/formats/proto/DetectionProto.java",
+            "com/google/mediapipe/formats/proto/RectProto.java",
+            "com/google/mediapipe/formats/proto/ClassificationProto.java",
             "com/google/mediapipe/formats/proto/LocationDataProto.java",
             "com/google/mediapipe/formats/annotation/proto/RasterizationProto.java",
         ],

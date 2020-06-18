@@ -21,12 +21,14 @@ output_stream: "output_video"
 node {
   calculator: "FlowLimiterCalculator"
   input_stream: "input_video"
+  input_stream: "overlay"
   input_stream: "FINISHED:multi_hand_rects"
   input_stream_info: {
     tag_index: "FINISHED"
     back_edge: true
   }
   output_stream: "throttled_input_video"
+  output_stream: "throttled_overlay"
 }
 
 # Determines if an input vector of NormalizedRect has a size greater than or
@@ -126,7 +128,7 @@ node {
   input_stream: "NORM_RECTS:1:multi_hand_rects"
   input_stream: "ITERABLE:multi_handedness"
   input_stream: "MULTIGESTURE:multi_recognized_hand_gesture"
-  input_stream: "DEBUG:overlay"
+  input_stream: "DEBUG:throttled_overlay"
 #  input_stream: "RECOGNIZED_HAND_GESTURE:recognized_hand_gesture"
   output_stream: "IMAGE:output_video"
 }
