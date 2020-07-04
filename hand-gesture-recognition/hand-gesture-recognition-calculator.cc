@@ -61,12 +61,13 @@ public:
     std::vector<size_t> sort_indexes(const std::vector<float> &v);
 
 private:
-    int top_k = 3;
+    int top_k = 1;
     
+    float thre = 3.2;
+
     sampleset datas; // dataset
     
-
-    float floatdatas[30][21][2];
+    float floatdatas[120][21][2];
     
     std::vector<int> class_id;
     
@@ -109,14 +110,14 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     char* path = (char*)string_path.c_str();
     FILE* f = fopen(path, "rb");
     if (f){
-        fread(floatdatas,1,/*number of byte*/30*21*2*4,f);
+        fread(floatdatas,1,/*number of byte*/120*21*2*4,f);
         fclose(f);
     }
 
     //convert dataset to vector format
     keypoints kpt;
     point single_sample;
-    for (int i = 0; i < 30; i++){
+    for (int i = 0; i < 120; i++){
         for (int j = 0; j < 21; j++){
             single_sample.x = floatdatas[i][j][0];
             single_sample.y = floatdatas[i][j][1];
@@ -126,12 +127,12 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
         kpt.points.clear();
     }
     //init class id
-    for (int i = 0; i < 30; i++){
-        if (i < 10){
+    for (int i = 0; i < 120; i++){
+        if (i < 40){
             class_id.push_back(0); //paper
         }
-        else if (i < 20){
-            class_id.push_back(1); //rock
+        else if (i < 80){
+            class_id.push_back(1); //one
         }
         else{
             class_id.push_back(2); //Scissors
@@ -184,6 +185,8 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     float yy;
     float xmin = 999999.0;
     float ymin = 999999.0;
+    float xmax = -1;
+    float ymax = -1;
     //Minimum coordinate search. Transform coordinate system
     for(int point_id=0; point_id<21;point_id++){
         if(landmarkList.landmark(point_id).x()<xmin){
@@ -192,31 +195,48 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
         if(landmarkList.landmark(point_id).y()<ymin){
             ymin = landmarkList.landmark(point_id).y();
         }
+        if(landmarkList.landmark(point_id).x()>xmax){
+            xmax = landmarkList.landmark(point_id).x();
+        }
+        if(landmarkList.landmark(point_id).y()>ymax){
+            ymax = landmarkList.landmark(point_id).y();
+        }
     }
+    //rescale
+    xmax -= xmin;
+    ymax -= ymin;
+    float rx = 1 / (xmax + 0.01);
+    float ry = 1 / (ymax + 0.01);
     for (int point_id=0; point_id<21;point_id++){
         xx = landmarkList.landmark(point_id).x() - xmin;
         yy = landmarkList.landmark(point_id).y() - ymin;
+        xx *= rx;
+        yy *= ry;
         pt.x = xx;
         pt.y = yy;
         kpt.points.push_back(pt);
     }
     int sample_id = query(&kpt);
     if (sample_id==0){
-        recognized_hand_gesture = new std::string("paper");
-        gesture->set_ges("paper");
+        // recognized_hand_gesture = new std::string("paper");
+        gesture->set_ges("five");
         // result->push_back("paper");
     }
     if (sample_id==1){
-        recognized_hand_gesture = new std::string("rock");
-        gesture->set_ges("rock");
+        // recognized_hand_gesture = new std::string("one");
+        gesture->set_ges("one");
         // result->push_back("rock");
     }
     if (sample_id==2){
-        recognized_hand_gesture = new std::string("Scissors");
-        gesture->set_ges("Scissors");
+        // recognized_hand_gesture = new std::string("Scissors");
+        gesture->set_ges("yes");
         // result->push_back("scissor");
     }
-
+    if (sample_id==-1){
+        // recognized_hand_gesture = new std::string("Scissors");
+        gesture->set_ges("___");
+        // result->push_back("scissor");
+    }
     cc->Outputs()
         .Tag(recognizedHandGestureTag)
         .Add(gesture, cc->InputTimestamp());
@@ -257,7 +277,7 @@ std::vector<size_t> HandGestureRecognitionCalculator::sort_indexes(const std::ve
 }
 
 void HandGestureRecognitionCalculator::calculate_distance(keypoints* k1){
-    for(int i=0;i<30;i++){
+    for(int i=0;i<120;i++){
         _distance.push_back(distance_between_keypoint(k1,&datas.samples[i]));
     }
 }
@@ -271,6 +291,7 @@ int HandGestureRecognitionCalculator::query(keypoints* k1){
     int count1 = 0;
     int count2 = 0;
     int sample_id = -1;
+    float dist = 0.0;
     for (int i=0; i<top_k; i++){
         if(class_id[(int)index[i]] == 0){
             count0 += 1;
@@ -281,6 +302,11 @@ int HandGestureRecognitionCalculator::query(keypoints* k1){
         if(class_id[(int)index[i]] == 2){
             count2 += 1;
         }
+        dist += _distance[(int)index[i]];
+    }
+    dist = dist /(float)top_k;
+    if(dist > thre){
+        return sample_id;
     }
     if (count0 > count1 && count0 > count2){
         sample_id = 0;
@@ -291,7 +317,6 @@ int HandGestureRecognitionCalculator::query(keypoints* k1){
     if (count2 > count0 && count2 > count1){
         sample_id = 2;
     }
-    // int sample_id = class_id[(int)index[0]];
     return sample_id;
 }
 
