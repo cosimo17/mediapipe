@@ -38,6 +38,12 @@ mediapipe_proto_library(
 )
 
 mediapipe_proto_library(
+    name = "gesture_proto",
+    srcs = ["gesture.proto"],
+    visibility = ["//visibility:public"],
+)
+
+mediapipe_proto_library(
     name = "image_format_proto",
     srcs = ["image_format.proto"],
     visibility = ["//visibility:public"],

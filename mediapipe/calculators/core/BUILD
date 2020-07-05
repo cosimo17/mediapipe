@@ -253,6 +253,7 @@ cc_library(
         "//mediapipe/framework:collection_item_id",
         "//mediapipe/framework:packet",
         "//mediapipe/framework/formats:classification_cc_proto",
+        "//mediapipe/framework/formats:gesture_cc_proto",
         "//mediapipe/framework/formats:landmark_cc_proto",
         "//mediapipe/framework/formats:rect_cc_proto",
         "//mediapipe/framework/port:integral_types",

@@ -27,7 +27,7 @@
 #include "mediapipe/util/annotation_renderer.h"
 #include "mediapipe/util/color.pb.h"
 #include "mediapipe/util/render_data.pb.h"
-
+#include "mediapipe/framework/formats/gesture.pb.h"
 #if !defined(MEDIAPIPE_DISABLE_GPU)
 #include "mediapipe/gpu/gl_calculator_helper.h"
 #include "mediapipe/gpu/gl_simple_shaders.h"
@@ -170,7 +170,8 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
   CHECK_GE(cc->Inputs().NumEntries(), 1);
 
   RET_CHECK(cc->Inputs().HasTag(recognizedHandGestureTag));
-  cc->Inputs().Tag(recognizedHandGestureTag).Set<std::vector<std::string>>();
+  // cc->Inputs().Tag(recognizedHandGestureTag).Set<std::vector<std::string>>();
+  cc->Inputs().Tag(recognizedHandGestureTag).Set<std::vector<::mediapipe::Gesture>>();
   bool use_gpu = false;
 
   if (cc->Inputs().HasTag(kInputFrameTag) &&
@@ -326,8 +327,13 @@ REGISTER_CALCULATOR(AnnotationOverlayCalculator);
           }
         }
       }
-    }
-
+      // const auto &recognizedHandGesture = cc->Inputs().Tag(recognizedHandGestureTag).Get<std::string>();
+      // const std::vector<std::string> &recognizedHandGesture = cc->Inputs().Tag(recognizedHandGestureTag).Get<std::vector<std::string>>();
+      const std::vector<Gesture> &recognizedHandGesture = cc->Inputs().Tag(recognizedHandGestureTag).Get<std::vector<Gesture>>();
+      for(int gesture_id=0;gesture_id<recognizedHandGesture.size();gesture_id++){
+        renderer_->DrawText2(recognizedHandGesture[gesture_id].ges(), gesture_id);
+      }
+  }
   if (use_gpu_) {
 #if !defined(MEDIAPIPE_DISABLE_GPU)
     // Overlay rendered image in OpenGL, onto a copy of input.

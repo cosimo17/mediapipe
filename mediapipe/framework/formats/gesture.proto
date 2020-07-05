@@ -11,28 +11,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
-// A protocol buffer encoding one or several classifications in an image. A
-// classification is defined by label and corresponding score, representing the
-// classifier confidence for the label.
 
 syntax = "proto2";
 
 package mediapipe;
 
 option java_package = "com.google.mediapipe.formats.proto";
-option java_outer_classname = "ClassificationProto";
+option java_outer_classname = "GestureProto";
 
-message Classification {
-  // The index of the class in the corresponding label map.
-  optional int32 index = 1;
-  // The probability score for this class.
-  optional float score = 2;
-  // Label or name of the class.
-  optional string label = 3;
+message Gesture {
+  optional string ges = 1;
 }
 
-// Group of Classification protos.
-message ClassificationList {
-  repeated Classification classification = 1;
+message GestureList {
+  repeated Gesture gesture = 1;
 }

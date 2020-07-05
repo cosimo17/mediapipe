@@ -79,6 +79,13 @@ cat > $(OUTS) <<EOF
     )
 
     _proto_java_src_generator(
+        name = "gesture_proto",
+        proto_src = "mediapipe/framework/formats/gesture.proto",
+        java_lite_out = "com/google/mediapipe/formats/proto/GestureProto.java",
+        srcs = ["//mediapipe/framework/formats:protos_src"],
+    )
+
+    _proto_java_src_generator(
         name = "rasterization_proto",
         proto_src = "mediapipe/framework/formats/annotation/rasterization.proto",
         java_lite_out = "com/google/mediapipe/formats/annotation/proto/RasterizationProto.java",
@@ -120,6 +127,7 @@ cat > $(OUTS) <<EOF
         java_lite_out = "com/google/mediapipe/formats/proto/ClassificationProto.java",
         srcs = [
             "//mediapipe/framework/formats:protos_src",
+            "//mediapipe/framework/formats/annotation:protos_src",
         ],
     )
 
@@ -133,9 +141,10 @@ cat > $(OUTS) <<EOF
             "com/google/mediapipe/formats/proto/LandmarkProto.java",
             "com/google/mediapipe/formats/proto/DetectionProto.java",
             "com/google/mediapipe/formats/proto/RectProto.java",
-            "com/google/mediapipe/formats/proto/ClassificationProto.java",
             "com/google/mediapipe/formats/proto/LocationDataProto.java",
             "com/google/mediapipe/formats/annotation/proto/RasterizationProto.java",
+            "com/google/mediapipe/formats/proto/GestureProto.java",
+            "com/google/mediapipe/formats/proto/ClassificationProto.java",
         ],
         manifest = "AndroidManifest.xml",
         proguard_specs = ["//mediapipe/java/com/google/mediapipe/framework:proguard.pgcfg"],

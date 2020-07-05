@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <numeric>      // std::iota
 #include <algorithm>    // std::sort, std::stable_sort
+#include "mediapipe/framework/formats/gesture.pb.h"
 
 namespace mediapipe
 {
@@ -88,7 +89,8 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     cc->Inputs().Tag(normRectTag).Set<NormalizedRect>();
 
     RET_CHECK(cc->Outputs().HasTag(recognizedHandGestureTag));
-    cc->Outputs().Tag(recognizedHandGestureTag).Set<std::string>();
+    // cc->Outputs().Tag(recognizedHandGestureTag).Set<std::string>();
+    cc->Outputs().Tag(recognizedHandGestureTag).Set<Gesture>();
     // cc->Outputs().Tag(recognizedHandGestureTag).Set<std::vector<std::string>>();
     return ::mediapipe::OkStatus();
 }
@@ -150,6 +152,7 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     float height = rect->height();
 
     //default
+    Gesture *gesture = new Gesture;
     recognized_hand_gesture = new std::string("___");
     // std::vector<std::string>* result = new std::vector<std::string>;
     // result->push_back("test");
@@ -158,10 +161,11 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     {
         // LOG(INFO) << "No Hand Detected";
         recognized_hand_gesture = new std::string("___");
+        gesture->set_ges("___");
         // result->push_back("___");
         cc->Outputs()
             .Tag(recognizedHandGestureTag)
-            .Add(recognized_hand_gesture, cc->InputTimestamp());
+            .Add(gesture, cc->InputTimestamp());
         return ::mediapipe::OkStatus();
     }
 
@@ -199,20 +203,23 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     int sample_id = query(&kpt);
     if (sample_id==0){
         recognized_hand_gesture = new std::string("paper");
+        gesture->set_ges("paper");
         // result->push_back("paper");
     }
     if (sample_id==1){
         recognized_hand_gesture = new std::string("rock");
+        gesture->set_ges("rock");
         // result->push_back("rock");
     }
     if (sample_id==2){
         recognized_hand_gesture = new std::string("Scissors");
+        gesture->set_ges("Scissors");
         // result->push_back("scissor");
     }
 
     cc->Outputs()
         .Tag(recognizedHandGestureTag)
-        .Add(recognized_hand_gesture, cc->InputTimestamp());
+        .Add(gesture, cc->InputTimestamp());
     // cc->Outputs()
     //     .Tag(recognizedHandGestureTag)
     //     .Add(result, cc->InputTimestamp());

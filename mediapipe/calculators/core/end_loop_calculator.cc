@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "mediapipe/framework/formats/classification.pb.h"
+#include "mediapipe/framework/formats/gesture.pb.h"
 #include "mediapipe/framework/formats/landmark.pb.h"
 #include "mediapipe/framework/formats/rect.pb.h"
 #include "mediapipe/util/render_data.pb.h"
@@ -47,6 +48,8 @@ REGISTER_CALCULATOR(EndLoopClassificationListCalculator);
 typedef EndLoopCalculator<std::vector<TfLiteTensor>> EndLoopTensorCalculator;
 REGISTER_CALCULATOR(EndLoopTensorCalculator);
 
-typedef EndLoopCalculator<std::vector<std::string>> EndLoopGestureCalculator;
+// typedef EndLoopCalculator<std::vector<std::string>> EndLoopGestureCalculator;
+// REGISTER_CALCULATOR(EndLoopGestureCalculator);
+typedef EndLoopCalculator<std::vector<::mediapipe::Gesture>> EndLoopGestureCalculator;
 REGISTER_CALCULATOR(EndLoopGestureCalculator);
 }  // namespace mediapipe

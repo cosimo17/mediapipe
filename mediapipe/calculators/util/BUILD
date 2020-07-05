@@ -329,6 +329,7 @@ cc_library(
         "//mediapipe/framework/port:vector",
         "//mediapipe/util:annotation_renderer",
         "//mediapipe/util:render_data_cc_proto",
+        "//mediapipe/framework/formats:gesture_cc_proto",
     ] + select({
         "//mediapipe/gpu:disable_gpu": [],
         "//conditions:default": [
