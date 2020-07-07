@@ -67,7 +67,7 @@ private:
 
     sampleset datas; // dataset
     
-    float floatdatas[250][21][2];
+    float floatdatas[413][21][2];
     
     std::vector<int> class_id;
     
@@ -110,14 +110,14 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
     char* path = (char*)string_path.c_str();
     FILE* f = fopen(path, "rb");
     if (f){
-        fread(floatdatas,1,/*number of byte*/250*21*2*4,f);
+        fread(floatdatas,1,/*number of byte*/413*21*2*4,f);
         fclose(f);
     }
 
     //convert dataset to vector format
     keypoints kpt;
     point single_sample;
-    for (int i = 0; i < 250; i++){
+    for (int i = 0; i < 413; i++){
         for (int j = 0; j < 21; j++){
             single_sample.x = floatdatas[i][j][0];
             single_sample.y = floatdatas[i][j][1];
@@ -127,11 +127,11 @@ REGISTER_CALCULATOR(HandGestureRecognitionCalculator);
         kpt.points.clear();
     }
     //init class id
-    for (int i = 0; i < 250; i++){
+    for (int i = 0; i < 413; i++){
         if (i < 40){
             class_id.push_back(0); //paper
         }
-        else if (i < 178){
+        else if (i < 197){
             class_id.push_back(1); //one
         }
         else{
@@ -277,7 +277,7 @@ std::vector<size_t> HandGestureRecognitionCalculator::sort_indexes(const std::ve
 }
 
 void HandGestureRecognitionCalculator::calculate_distance(keypoints* k1){
-    for(int i=0;i<250;i++){
+    for(int i=0;i<413;i++){
         _distance.push_back(distance_between_keypoint(k1,&datas.samples[i]));
     }
 }
